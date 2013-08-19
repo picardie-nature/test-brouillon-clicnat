@@ -56,7 +56,9 @@ abstract class clicnat_table_db {
 	protected $cle_primaire;
 	protected $schema;
 
-	const sql_colonnes = 'select column_name,data_type,character_maximum_length,is_nullable from information_schema.columns where table_name=? and column_name=?';
+	protected $colonnes;
+
+	const sql_colonnes = 'select column_name,data_type,character_maximum_length,is_nullable from information_schema.columns where table_schema=? table_name=?';
 	
 	public function __construct($table, $cle_primaire, $schema="public") {
 		$this->table = $table;
@@ -65,7 +67,25 @@ abstract class clicnat_table_db {
 	}
 
 	public function colonnes() {
-		
+		if (!isset($colonnes)) {
+			$q = $db()->prepare(self::sql_colonnes);
+			$q->execute(array($this->schema, $this->table));
+			//...
+		}
+	}
+}
+
+class clicnat_colonne_db {
+	protected $nom;
+	protected $type;
+	protected $lmax_texte;
+	protected $null_ok;
+
+	function __construct($args) {
+		$this->nom = $args['column_name'];
+		$this->type = $args['data_type'];
+		$this->lmax_texte = $args['character_maximum_length'];
+		$this->null_ok = $args['is_nullable'] == 'YES';
 	}
 }
 ?>
