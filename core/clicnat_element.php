@@ -6,7 +6,7 @@
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+    any later version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -55,29 +55,41 @@ function db() {
  * chaque table est associée à une classe dérivée cette classe
  */
 abstract class clicnat_element_db {
+	protected $table;
+
 	/**
 	 * @brief constructeur
-	 * @param $table classe dérivée de clicnat_table_db
+	 * @param $nom_table classe dérivée de clicnat_table_db
 	 * @param $id identifiant de la ressource a extraire
 	 * @param $data données de l'objet évite au constructeur de faire la requête, l'id peut être omis
 	 */
-	public function __construct($table, $id, $data=null) {
+	public function __construct($id, $nom_table, $data=null) {
+		$this->table = clicnat_table_db($nom_table);
+		if (!is_array($data)) {
+			$q = db()->prepare("select * from {$this->table->table} where {$this->table->cle_primaire} = ?");
+			$q->execute(array($id));
+			$data = $q->fetch(PDO::FETCH_ASSOC);
+		}
+		foreach ($data as $k=>$v)
+			$this->$k = $v;
+	}
+
+	public function enregistre($champ, $valeur) {
+		return $this->table->enregistre($champ, $valeur);
 	}
 }
 
 /**
  * @brief une table de la base de données
- *
- * chaque table est associée à une classe dérivée cette classe
  */
-abstract class clicnat_table_db {
+class clicnat_table_db {
 	protected $table;
 	protected $cle_primaire;
 	protected $schema;
 
 	protected $colonnes;
 
-	const sql_colonnes = 'select column_name,data_type,character_maximum_length,is_nullable from information_schema.columns where table_schema=? table_name=?';
+	const sql_colonnes = 'select column_name,data_type,character_maximum_length,is_nullable from information_schema.columns where table_schema=? and table_name=?';
 	
 	public function __construct($table, $cle_primaire, $schema="public") {
 		$this->table = $table;
@@ -85,12 +97,30 @@ abstract class clicnat_table_db {
 		$this->schema = $schema;
 	}
 
-	public function colonnes() {
-		if (!isset($colonnes)) {
-			$q = $db()->prepare(self::sql_colonnes);
-			$q->execute(array($this->schema, $this->table));
-			//...
+	public function __get($c) {
+		switch ($c) {
+			case 'table': return $this->table;
+			case 'cle_primaire': return $this->cle_primaire;
+			case 'schema': return $this->schema;
 		}
+		throw new Exception('champ inconnu');
+	}
+
+	public function colonnes() {
+		if (!isset($this->colonnes)) {
+			$this->colonnes = array();
+			$req = db()->prepare(self::sql_colonnes);
+			$req->execute(array($this->schema, $this->table));
+			foreach ($req->fetchAll() as $tc)
+				$this->colonnes[] = new clicnat_colonne_db($tc);
+		}
+		return $this->colonnes;
+	}
+
+	public function enregistre($id, $colonne, $valeur) {
+		$req = db()->prepare("update {$this->table} set $colonne = $ where {$this->cle_primaire} = $");
+		$req->execute(array($valeur, $colonne, $id));
+		return $req->rowCount()==1;
 	}
 }
 
@@ -106,5 +136,27 @@ class clicnat_colonne_db {
 		$this->lmax_texte = $args['character_maximum_length'];
 		$this->null_ok = $args['is_nullable'] == 'YES';
 	}
+}
+
+function clicnat_table_db($table) {
+	static $instances;
+
+	if (!isset($instances))
+		$instances = array();
+	
+	if (!isset($instances[$table])) {
+		$schema = "public";
+		switch ($table) {
+			case 'utilisateurs':
+				$cle_primaire = "id_utilisateur";
+				break;
+			default:
+				throw new Exception("Table inconnue $table");
+		}
+
+		$instances[$table] = new clicnat_table_db($table, $cle_primaire, $schema);
+	}
+
+	return $instances[$table];
 }
 ?>
