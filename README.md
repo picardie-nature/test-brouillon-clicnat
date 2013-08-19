@@ -24,7 +24,7 @@ En l'état, il n'y a rien d'utilisable, mais les contributions sont les bienvenu
     local   clicnat_test	votreLogin	peer
     local   clicnat_test	www-data	peer
 
-Après avoir redémarrer et postgres et sous votre compte installer postgis
+Après avoir redémarré Postgres revenez sous votre compte et installez postgis
 
     $ psql clicnat_test -f /usr/share/postgresql/9.1/contrib/postgis-2.0/postgis.sql
     $ psql clicnat_test -f /usr/share/postgresql/9.1/contrib/postgis-2.0/legacy.sql
