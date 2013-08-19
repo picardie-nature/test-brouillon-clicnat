@@ -49,6 +49,8 @@ function db() {
 	return $dbh;
 }
 
+class ExPropInconnue extends Exception { }
+
 /**
  * @brief une ligne d'une table 
  *
@@ -75,7 +77,13 @@ abstract class clicnat_element_db {
 	}
 
 	public function enregistre($champ, $valeur) {
-		return $this->table->enregistre($champ, $valeur);
+		if ($this->table->enregistre($this->id(), $champ, $valeur)) {
+			$this->$champ = $valeur;
+		}
+	}
+
+	public function id() {
+		return $this->{$this->table->cle_primaire};
 	}
 }
 
@@ -103,7 +111,7 @@ class clicnat_table_db {
 			case 'cle_primaire': return $this->cle_primaire;
 			case 'schema': return $this->schema;
 		}
-		throw new Exception('champ inconnu');
+		throw new ExPropInconnue($c);
 	}
 
 	public function colonnes() {
@@ -118,9 +126,14 @@ class clicnat_table_db {
 	}
 
 	public function enregistre($id, $colonne, $valeur) {
-		$req = db()->prepare("update {$this->table} set $colonne = $ where {$this->cle_primaire} = $");
-		$req->execute(array($valeur, $colonne, $id));
-		return $req->rowCount()==1;
+		if (empty($id))
+			throw new Exception("pas d'identifiant");
+		$req = db()->prepare("update {$this->table} set $colonne = ? where {$this->cle_primaire} = ?");
+		$req->execute(array($valeur, $id));
+		if ($req->rowCount()==0) {
+			throw new Exception("aucune mise à jour enregistrée {$req->errorCode()}");
+		}
+		return true;
 	}
 }
 
@@ -135,6 +148,17 @@ class clicnat_colonne_db {
 		$this->type = $args['data_type'];
 		$this->lmax_texte = $args['character_maximum_length'];
 		$this->null_ok = $args['is_nullable'] == 'YES';
+	}
+
+	function __get($c) {
+		switch ($c) {
+			case 'nom':
+			case 'type':
+			case 'lmax_texte':
+			case 'null_ok':
+				return $this->$c;
+		}
+		throw new ExPropInconnue($c);
 	}
 }
 

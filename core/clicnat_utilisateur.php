@@ -55,8 +55,10 @@ class clicnat_utilisateur extends clicnat_element_db {
 
 	public function connexion($mdp) {
 		if (self::crypte_mot_de_passe($mdp) == $this->mot_de_passe) {
-			// maj derniere connexion
+			$this->enregistre('derniere_connexion', strftime("%Y-%m-%d %H:%M:%S"));
+			return true;
 		}
+		return false;
 	}
 }
 ?>
