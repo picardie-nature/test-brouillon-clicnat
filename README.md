@@ -19,7 +19,7 @@ En l'état, il n'y a rien d'utilisable, mais les contributions sont les bienvenu
     $ psql
     sql> create database clicnat\_test;
 
-Éditez le fichier pg\_hba.conf et ajouter ces deux lignes
+Éditez le fichier pg_hba.conf et ajouter ces deux lignes
 
     local   clicnat_test	votreLogin	peer
     local   clicnat_test	www-data	peer
