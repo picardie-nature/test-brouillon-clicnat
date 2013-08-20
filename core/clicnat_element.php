@@ -83,7 +83,9 @@ abstract class clicnat_element_db {
 	public function enregistre($champ, $valeur) {
 		if ($this->table->enregistre($this->id(), $champ, $valeur)) {
 			$this->$champ = $valeur;
+			return true;
 		}
+		return false;
 	}
 
 	public function id() {
