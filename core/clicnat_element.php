@@ -18,6 +18,8 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+class ExPropInconnue extends Exception { }
+class ExConfiguration extends Exception { }
 
 /**
  * @brief accès à la configuration de l'application
@@ -28,6 +30,9 @@ function conf() {
 	if (!isset($conf)) {
 		if (!defined('CLICNAT_CHEMIN_CONF')) {
 			define('CLICNAT_CHEMIN_CONF', '/etc/clicnat/conf.json');
+		}
+		if (!file_exists(CLICNAT_CHEMIN_CONF)) {
+			throw new ExConfiguration("Le fichier de configuration ".CLICNAT_CHEMIN_CONF." existe pas");
 		}
 		$conf = json_decode(file_get_contents(CLICNAT_CHEMIN_CONF));
 	}
@@ -49,7 +54,6 @@ function db() {
 	return $dbh;
 }
 
-class ExPropInconnue extends Exception { }
 
 /**
  * @brief une ligne d'une table 

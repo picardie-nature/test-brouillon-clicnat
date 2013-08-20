@@ -27,7 +27,7 @@ create table utilisateurs (
         tel character varying(30),
         port character varying(30),
         fax character varying(30),
-        mail character varying(100),
+        mail character varying(100) unique,
         url character varying(100),
         acces_qg boolean not null default false,
         acces_chiros boolean not null default false,
@@ -36,6 +36,7 @@ create table utilisateurs (
         the_geom geometry, -- todo utiliser la fonction postgis
         localisation_visible t_utilisateurs_loc_visible not null default ('restreint'),
 	options text,
+	nouvel_observateur boolean default false,
 	primary key (id_utilisateur)
 );
 

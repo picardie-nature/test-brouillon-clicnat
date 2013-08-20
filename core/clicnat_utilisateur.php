@@ -39,6 +39,7 @@ class clicnat_utilisateur extends clicnat_element_db {
 	protected $derniere_connexion;
 	protected $localisation_visible;
 	protected $options;
+	protected $nouvel_observateur;
 
 	public function __construct($id, $nom_table='utilisateurs', $data=null) {
 		$this->table = clicnat_table_db($nom_table);
@@ -59,6 +60,215 @@ class clicnat_utilisateur extends clicnat_element_db {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * @brief recherche d'utilisateurs
+	 * @params $args un tableau cle/valeur, la clé doit correspondre a un champ
+	 * @return clicnat_iter_utilisateur
+	 * @todo
+	 */
+	static public function rechercher($args) {
+	}
+
+	/**
+	 * @brief recherche d'utilisateurs basée sur le nom et le prénom
+	 * $params $txt le texte avec le nom et le prénom
+	 * @return clicnat_iter_utilisateur
+	 * @todo
+	 */
+	static public function rechercher_utilisateur($str) {
+	}
+
+	/**
+	 * @brief personnes avec qui l'observateur observe
+	 * @return clicnat_iter_utilisateur
+	 * @todo
+	 */
+	public function co_observateurs() {
+	}
+
+	/**
+	 * @brief nombre d'observations enregistrées
+	 * @return int
+	 * @todo
+	 */
+	public function n_observations() {
+	}
+
+	/**
+	 * @brief nombre d'observations saisies par l'utilisateur
+	 * @return int
+	 * @todo
+	 */
+	public function n_observations_saisies() {
+	}
+
+	/**
+	 * @brief nombre de citations enregistrées
+	 * @return int
+	 * @todo
+	 */
+	public function n_citations() {
+	}
+
+	/**
+	 * @brief nombre de citations saisies par l'utilisateur
+	 * @return int
+	 * @todo
+	 */
+	public function n_citations_saisies() {
+	}
+
+	/**
+	 * @brief nombre de citations avec une étiquette
+	 * @return int
+	 * @todo
+	 */
+	public function n_avec_etiquette() {
+	}
+
+	/**
+	 * @brief date de la première observation
+	 * @return clicnat_date
+	 * @todo
+	 */
+	public function premiere_date_obs() {
+	}
+
+	/**
+	 * @brief date de la dernière observation
+	 * @return clicnat_date
+	 * @todo
+	 */
+	public function derniere_date_obs() {
+	}
+
+	/**
+	 * @brief liste des espèces vues
+	 * @return clicnat_it_espece
+	 * @todo
+	 */
+	public function especes_vues() {
+	}
+
+	/**
+	 * @brief mise à disposition des données
+	 * @return bool
+	 * @todo
+	 *
+	 * Lister les id_citation que l'observateur peut consulter et
+	 * l'enregistrer dans une table
+	 */
+	public function mise_a_disposition_des_donnees() {
+	}
+
+	/**
+	 * @brief test si l'utilisateur peut voir
+	 * @param $obj objet clicnat_citation ou clicnat_observation
+	 * @return bool
+	 * @todo
+	 */
+	public function peut_consulter($obj) {
+	}
+
+	/**
+	 * @brief test si l'utilisateur peut modifier
+	 * @param $obj objet clicnat_citation ou clicnat_observation
+	 * @return bool
+	 * @todo
+	 */
+	public function peut_modifier($obj) {
+	}
+
+	/**
+	 * @brief liste des listes de citations de l'utilisateur
+	 * @return clicnat_it_listes_citations
+	 * @todo
+	 */
+	public function listes_citations() {
+	}
+
+	/**
+	 * @brief liste des listes d'espaces de l'utilisateur
+	 * @return clicnat_it_listes_espaces
+	 * @todo
+	 */
+	public function listes_espaces() {
+	}
+
+	/**
+	 * @brief liste des listes d'espèces de l'utilisateur
+	 * @return clicnat_it_listes_especes
+	 * @todo
+	 */
+	public function listes_especes() {
+	}
+
+	/**
+	 * @brief liste des observations pas encore envoyées
+	 * @return clicnat_it_observations
+	 * @todo
+	 */
+	public function observations_brouillard() {
+	}
+
+	/**
+	 * @brief liste des imports
+	 * @return clicnat_it_import
+	 * @todo
+	 */
+	public function imports() {
+	}
+
+	/**
+	 * @brief envoi lien nouveau mot de passe
+	 * @return bool
+	 * @todo
+	 */
+	public function envoi_ticket_recup_mot_de_passe() {
+	}
+
+	/**
+	 * @brief liste les structures auxquels appartient l'utilisateur
+	 * @return bool
+	 * @todo
+	 */
+	public function structures() {
+	}
+
+	/**
+	 * @brief nombre d'observateurs dans la base
+	 * @param $annee avec une observation entre $annee et aujourd'hui
+	 * @return int
+	 * @todo
+	 */
+	static function n_observateurs($annee=false) {
+	}
+
+	/**
+	 * @brief réseaux dont l'observateur est membre
+	 * @return clicnat_it_reseaux
+	 * @todo
+	 */
+	public function reseaux() {
+	}
+
+	/**
+	 * @brief test si l'observateur est membre
+	 * @param $reseau objet clicnat_reseau
+	 * @return bool
+	 * @todo
+	 */
+	public function membre_reseau($reseau) {
+	}
+
+	/**
+	 * @brief liste des requetes enregistrées de l'utilisateur
+	 * @return clicnat_it_requetes
+	 * @todo
+	 */
+	public function requetes() {
 	}
 }
 ?>
