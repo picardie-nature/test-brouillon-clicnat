@@ -4,6 +4,11 @@ require_once("PHPUnit/Autoload.php");
 require_once("../core/clicnat_element.php");
 
 class clicnat_table_dbTest extends PHPUnit_Framework_TestCase {
+	public function testGetTableDb() {
+		$obj_a = clicnat_table_db("utilisateurs");
+		$this->assertInstanceOf("clicnat_table_db", $obj_a);
+	}
+
 	public function testInstanceUtilisateur() {
 		$obj = new clicnat_table_db("utilisateurs", "id_utilisateur");
 		$this->assertEquals($obj->table, "utilisateurs");
