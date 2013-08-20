@@ -125,7 +125,7 @@ class clicnat_utilisateur extends clicnat_element_db {
 	 * @return int
 	 * @todo
 	 */
-	public function n_avec_etiquette() {
+	public function n_citations_avec_etiquette() {
 	}
 
 	/**
@@ -215,7 +215,7 @@ class clicnat_utilisateur extends clicnat_element_db {
 
 	/**
 	 * @brief liste des imports
-	 * @return clicnat_it_import
+	 * @return clicnat_it_imports
 	 * @todo
 	 */
 	public function imports() {
@@ -231,7 +231,7 @@ class clicnat_utilisateur extends clicnat_element_db {
 
 	/**
 	 * @brief liste les structures auxquels appartient l'utilisateur
-	 * @return bool
+	 * @return clicnat_it_structures
 	 * @todo
 	 */
 	public function structures() {
@@ -264,7 +264,7 @@ class clicnat_utilisateur extends clicnat_element_db {
 	}
 
 	/**
-	 * @brief liste des requetes enregistrées de l'utilisateur
+	 * @brief requetes enregistrées de l'utilisateur
 	 * @return clicnat_it_requetes
 	 * @todo
 	 */
