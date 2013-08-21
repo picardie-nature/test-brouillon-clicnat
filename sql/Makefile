@@ -1,6 +1,8 @@
-NOMDB=clicnat
+# principales options
+NOMDB=clicnat_dev
 DROPDB=0
 
+# configuration
 CPP=gcc -P -E -x c -I$(shell pwd)
 POSTGRE_DIR=$(shell pg_config --sharedir)
 POSTGIS_DIR=$(shell find $(POSTGRE_DIR)/contrib -type d -name "postgis-*")
