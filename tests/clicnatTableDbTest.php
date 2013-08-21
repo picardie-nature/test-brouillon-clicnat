@@ -17,7 +17,7 @@ class clicnat_table_dbTest extends PHPUnit_Framework_TestCase {
 
 		$colonnes = $obj->colonnes();
 		$this->assertTrue(is_array($colonnes));
-		$this->assertEquals(count($colonnes),19);
+		$this->assertEquals(count($colonnes),21);
 	}
 
 	/**

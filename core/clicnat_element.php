@@ -101,6 +101,17 @@ abstract class clicnat_element_db {
 	public function id() {
 		return $this->{$this->table->cle_primaire};
 	}
+
+	/**
+	 * @brief accès aux propriétés en lecture seule
+	 */
+	public function __get($colonne) {
+		$colonnes = $this->table->colonnes();
+		if (array_key_exists($colonne, $colonnes) === false) {
+			throw new ExPropInconnue($colonne);
+		}
+		return $this->$colonne;
+	}
 }
 
 /**
@@ -150,7 +161,7 @@ class clicnat_table_db {
 			$req = db()->prepare(self::sql_colonnes);
 			$req->execute(array($this->schema, $this->table));
 			foreach ($req->fetchAll() as $tc)
-				$this->colonnes[] = new clicnat_colonne_db($tc);
+				$this->colonnes[$tc['column_name']] = new clicnat_colonne_db($tc);
 		}
 		return $this->colonnes;
 	}
@@ -165,7 +176,7 @@ class clicnat_table_db {
 	public function enregistre($id, $colonne, $valeur) {
 		if (empty($id))
 			throw new Exception("pas d'identifiant");
-		$req = db()->prepare("update {$this->table} set $colonne = ? where {$this->cle_primaire} = ?");
+		$req = db()->prepare("update {$this->table} set $colonne = ?, date_modif=now() where {$this->cle_primaire} = ?");
 		$req->execute(array($valeur, $id));
 		if ($req->rowCount()==0) {
 			throw new Exception("aucune mise à jour enregistrée {$req->errorCode()}");

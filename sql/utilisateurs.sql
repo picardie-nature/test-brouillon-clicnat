@@ -37,6 +37,8 @@ create table utilisateurs (
         localisation_visible t_utilisateurs_loc_visible not null default ('restreint'),
 	options text,
 	nouvel_observateur boolean default false,
+	date_creation timestamp default now(),
+	date_modif timestamp default null,
 	primary key (id_utilisateur)
 );
 

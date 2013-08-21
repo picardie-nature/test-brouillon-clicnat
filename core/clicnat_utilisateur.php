@@ -50,14 +50,14 @@ class clicnat_utilisateur extends clicnat_element_db {
 		return trim("{$this->nom} {$this->prenom}");
 	}
 	
-	public function __get($c) {
+	/*public function __get($c) {
 		switch ($c) {
 			case 'pseudo':
 				return $this->pseudo;
 			case 'derniere_connexion':
 				return $this->derniere_connexion;
 		}
-	}
+	}*/
 
 	public function crypte_mot_de_passe($mdp) {
 		return hash('sha256', "{$mdp}§{$this->id_utilisateur}");
