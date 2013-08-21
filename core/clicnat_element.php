@@ -80,14 +80,24 @@ abstract class clicnat_element_db {
 			$this->$k = $v;
 	}
 
-	public function enregistre($champ, $valeur) {
-		if ($this->table->enregistre($this->id(), $champ, $valeur)) {
-			$this->$champ = $valeur;
+	/**
+	 * @brief mise à jour d'une colonne
+	 * @param $colonne nom de la colonne
+	 * @param $valeur valeur a enregistrer
+	 * @return bool
+	 */
+	public function enregistre($colonne, $valeur) {
+		if ($this->table->enregistre($this->id(), $colonne, $valeur)) {
+			$this->$colonne = $valeur;
 			return true;
 		}
 		return false;
 	}
 
+	/**
+	 * @brief numéro d'identifiant de l'objet
+	 * @return int
+	 */
 	public function id() {
 		return $this->{$this->table->cle_primaire};
 	}
@@ -105,12 +115,22 @@ class clicnat_table_db {
 
 	const sql_colonnes = 'select column_name,data_type,character_maximum_length,is_nullable from information_schema.columns where table_schema=? and table_name=?';
 	
+	/**
+	 * @brief constructeur
+	 * @param $table nom de la table
+	 * @param $cle_primaire nom de la colonne qui est la clé primaire
+	 * @param $schema schema si différent de public
+	 */
 	public function __construct($table, $cle_primaire, $schema="public") {
 		$this->table = $table;
 		$this->cle_primaire = $cle_primaire;
 		$this->schema = $schema;
 	}
 
+	/**
+	 * @brief accès en lecture seule à certaines propriétés
+	 * @param $c nom de la propriété
+	 */
 	public function __get($c) {
 		switch ($c) {
 			case 'table': return $this->table;
@@ -120,6 +140,10 @@ class clicnat_table_db {
 		throw new ExPropInconnue($c);
 	}
 
+	/**
+	 * @brief colonnes de la table
+	 * @return array clicnat_colonne_db
+	 */
 	public function colonnes() {
 		if (!isset($this->colonnes)) {
 			$this->colonnes = array();
@@ -131,6 +155,13 @@ class clicnat_table_db {
 		return $this->colonnes;
 	}
 
+	/**
+	 * @brief mise à jour d'une colonne
+	 * @param $id numéro d'identifiant de la ligne a mettre à jour
+	 * @param $colonne nom de la colonne
+	 * @param $valeur contenu
+	 * @return bool
+	 */
 	public function enregistre($id, $colonne, $valeur) {
 		if (empty($id))
 			throw new Exception("pas d'identifiant");
@@ -143,12 +174,19 @@ class clicnat_table_db {
 	}
 }
 
+/**
+ * @brief colonne d'une table
+ */
 class clicnat_colonne_db {
 	protected $nom;
 	protected $type;
 	protected $lmax_texte;
 	protected $null_ok;
 
+	/**
+	 * @brief constructeur
+	 * @param $args tableau resultat de la requête sur le schema
+	 */
 	function __construct($args) {
 		$this->nom = $args['column_name'];
 		$this->type = $args['data_type'];
@@ -156,6 +194,11 @@ class clicnat_colonne_db {
 		$this->null_ok = $args['is_nullable'] == 'YES';
 	}
 
+	/**
+	 * @brief accès aux propriétés en lecture seule
+	 * @param $c nom de la propriété
+	 * @return valeur de la propriété
+	 */
 	function __get($c) {
 		switch ($c) {
 			case 'nom':
@@ -168,14 +211,18 @@ class clicnat_colonne_db {
 	}
 }
 
-function clicnat_table_db($table) {
+/**
+ * @brief singleton d'une table
+ * @param $table nom de la table
+ * @return instance de clicnat_table_db
+ */
+function clicnat_table_db($table, $schema="public") {
 	static $instances;
 
 	if (!isset($instances))
 		$instances = array();
 	
-	if (!isset($instances[$table])) {
-		$schema = "public";
+	if (!isset($instances["$schema.$table"])) {
 		switch ($table) {
 			case 'utilisateurs':
 				$cle_primaire = "id_utilisateur";
@@ -184,9 +231,9 @@ function clicnat_table_db($table) {
 				throw new Exception("Table inconnue $table");
 		}
 
-		$instances[$table] = new clicnat_table_db($table, $cle_primaire, $schema);
+		$instances["$schema.$table"] = new clicnat_table_db($table, $cle_primaire, $schema);
 	}
 
-	return $instances[$table];
+	return $instances["$schema.$table"];
 }
 ?>
