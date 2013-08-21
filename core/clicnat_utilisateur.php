@@ -131,10 +131,11 @@ class clicnat_utilisateur extends clicnat_element_db {
 
 	/**
 	 * @brief nombre de citations avec une étiquette
+	 * @param $etiquette clicnat_etiquette
 	 * @return int
 	 * @todo
 	 */
-	public function n_citations_avec_etiquette() {
+	public function n_citations_avec_etiquette($etiquette) {
 	}
 
 	/**
