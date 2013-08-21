@@ -112,6 +112,19 @@ abstract class clicnat_element_db {
 		}
 		return $this->$colonne;
 	}
+
+	/**
+	 * @brief test l'existance de toutes les colonnes de la table en tant que propriétés
+	 * @return bool
+	 */
+	public function test_presence_proprietes_colonnes() {
+		foreach ($this->table->colonnes() as $colonne) {
+			if (!property_exists(get_class($this), $colonne->nom)) {
+				throw new Exception("la colonne {$colonne->nom} n'est pas représentée par une propriété");
+			}
+		}
+		return true;
+	}
 }
 
 /**

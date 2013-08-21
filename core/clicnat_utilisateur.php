@@ -26,7 +26,7 @@ class clicnat_utilisateur extends clicnat_element_db {
 	protected $nom;
 	protected $prenom;
 	protected $pseudo;
-	protected $login;
+	protected $identifiant;
 	protected $mot_de_passe;
 	protected $tel;
 	protected $port;
@@ -40,6 +40,9 @@ class clicnat_utilisateur extends clicnat_element_db {
 	protected $localisation_visible;
 	protected $options;
 	protected $nouvel_observateur;
+	protected $date_modif;
+	protected $date_creation;
+	protected $the_geom;
 
 	public function __construct($id, $nom_table='utilisateurs', $data=null) {
 		$this->table = clicnat_table_db($nom_table);

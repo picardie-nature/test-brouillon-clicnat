@@ -4,6 +4,10 @@ require_once("../core/clicnat_element.php");
 require_once("../core/clicnat_utilisateur.php");
 
 class clicnat_utilistateurTest extends PHPUnit_Framework_TestCase {
+	public function testPresenceColonnes() {
+		$u = new clicnat_utilisateur(1);
+		$u->test_presence_proprietes_colonnes();
+	}
 	public function testMotdePasse() {
 		$u = new clicnat_utilisateur(1);
 		
