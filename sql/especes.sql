@@ -43,94 +43,111 @@
 -- synonymes de noms vernaculaires qui peuvent être plusieurs et dans
 -- plusieurs langues... todo
 
+-- les référentiels officiels
 create table taxons (
-	id_taxon serial,	
+	id_taxon serial, -- interne a clicnat
+	id_taxon_sup integer, -- taxon superieur calculé depuis
+
 	date_creation timestamp default now(),
 	date_modif timestamp default null,
 
-	-- todo ajouter identifiant unique gbif
+	-- * identifiant unique
+	--   taxref CD_NOM
+	--   gbif   taxonID
+	identifiant varchar(200) unique, -- taxref.v6.cd_nom.42	
+	
+	-- * identifiant taxon sup
+	--   taxref CD_TAXSUP
+	--   gbif   parentNameUsageID
+	identifiant_taxon_sup varchar(200),
 
-	-- http://rs.tdwg.org/dwc/terms/index.htm#scientificName
+	-- * identifiant du taxon de référence
+	--   taxref CD_REF
+	--   gbif   acceptedNameUsageID
+	identifiant_taxon_ref varchar(200),
+	
+	-- * nom scientifique du taxon
+	--   taxref LB_NOM
+	--   gbif   scientificName
 	nom_scientifique varchar(100),
 
-	-- http://rs.tdwg.org/dwc/terms/index.htm#kingdom
-	reigne varchar(10),
+	-- * regne du taxon
+	--   taxref REGNE
+	--   gbif   kingdom
+	regne varchar(10),
 
-	-- http://rs.tdwg.org/dwc/terms/index.htm#phylum
-	embranchement varchar(100),
+	-- * Embranchement ou phylum
+	--   taxref PHYLUM
+	--   gbif   phylum
+	embranchement varchar(100), -- aka phylum
 
-	-- http://rs.tdwg.org/dwc/terms/index.htm#class
+	-- * Classe du taxon
+	--   taxref CLASSE
+	--   gbif   class
 	classe varchar(100),
 
-	-- http://rs.tdwg.org/dwc/terms/index.htm#ordre
+	-- * Ordre du taxon
+	--   taxref ORDRE
+	--   gbif   order
 	ordre varchar(100),
 
-	-- http://rs.tdwg.org/dwc/terms/index.htm#family
+	-- * Famille
+	--   taxref FAMILLE
+	--   gbif   family
 	famille varchar(100),
 
-	-- http://rs.tdwg.org/dwc/terms/index.htm#genus
-	genre varchar(100),
-
-	-- http://rs.tdwg.org/dwc/terms/index.htm#subgenus
-	sous_genre varchar(100),
-
+	-- * Rang du taxon
+	--   taxref RANG
+	--   gbif   taxonRank
+	-- peut être en fait un type pour contrôler les valeurs fournies ici
+	-- https://github.com/picardie-nature/clicnat/tree/master/referentiels/taxref#valeurs-de-la-colonne-rang
 	-- http://rs.tdwg.org/dwc/terms/index.htm#taxonRank
 	-- http://code.google.com/p/darwincore/wiki/Taxon#taxonRank
+	-- 
 	rang varchar(100),
 
+        -- * Nom vernaculaire du taxon
+	--   taxref NOM_VERN et NOM_VERN_ENG
+	--   gbif   vernacularName
+	-- ils peuvent être plusieurs et dans plusieurs langues
+	-- peut être un tableau avec un type composé ?
 	-- http://rs.tdwg.org/dwc/terms/index.htm#vernacularName
 	nom_vernaculaire varchar(100),
 
+	-- * Auteur du taxon
+	--   taxref LB_AUTEUR
+	--   gbif   scientificNameAuthorship
 	-- http://rs.tdwg.org/dwc/terms/index.htm#scientificNameAuthorship
 	auteur varchar(100),
-
-	-- http://rs.tdwg.org/dwc/terms/index.htm#taxonomicStatus
-	statut varchar(100),
 
 	primary key (id_taxon)
 );
 
+-- le référentiel de la base
 create table especes (
 	id_espece serial,
 	date_creation timestamp default now(),
 	date_modif timestamp default null,
 
-	-- taxon actuelle en vigueur
-	id_taxon integer references taxons (id_taxon),
+	id_espece_sup integer references especes(id_espece),
 
-	-- http://rs.tdwg.org/dwc/terms/index.htm#scientificName
 	nom_scientifique varchar(100),
-
-	-- http://rs.tdwg.org/dwc/terms/index.htm#kingdom
-	reigne varchar(10),
-
-	-- http://rs.tdwg.org/dwc/terms/index.htm#phylum
-	embranchement varchar(100),
-
-	-- http://rs.tdwg.org/dwc/terms/index.htm#class
-	classe varchar(100),
-
-	-- http://rs.tdwg.org/dwc/terms/index.htm#ordre
-	ordre varchar(100),
-
-	-- http://rs.tdwg.org/dwc/terms/index.htm#family
-	famille varchar(100),
-
-	-- http://rs.tdwg.org/dwc/terms/index.htm#genus
-	genre varchar(100),
-
-	-- http://rs.tdwg.org/dwc/terms/index.htm#subgenus
-	sous_genre varchar(100),
-
-	-- http://rs.tdwg.org/dwc/terms/index.htm#taxonRank
-	-- http://code.google.com/p/darwincore/wiki/Taxon#taxonRank
-	rang varchar(100),
-
-	-- http://rs.tdwg.org/dwc/terms/index.htm#vernacularName
+	auteur varchar(100),
 	nom_vernaculaire varchar(100),
 
-	-- http://rs.tdwg.org/dwc/terms/index.htm#scientificNameAuthorship
-	auteur varchar(100),
-
+	regne varchar(10),
+	embranchement varchar(100),
+	classe varchar(100),
+	ordre varchar(100),
+	famille varchar(100),
+	
+	rang varchar(100),
 	primary key (id_espece)
 );
+
+-- associations référentiel de la base avec référentiels officiels
+create table especes_taxons (
+	id_espece integer references especes (id_espece),
+	id_taxon integer references taxons (id_taxon)
+);
+
