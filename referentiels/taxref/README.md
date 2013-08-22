@@ -44,54 +44,63 @@ URL | Texte | Permalien INPN = "http://inpn.mnhn.fr/espece/cd_nom/" + CD\_NOM
 
 ### Valeurs de la colonne RANG
 
-Valeur | Description
-------|-------
-Dumm | Domaine
-SPRG | Super-Règne
-KD | _Règne_
-SSRG | Sous-Règne
-IFRG | Infra-Règne
-PH | _Phylum/Embranchement_
-SBPH | Sous-Phylum
-IFPH | Infra-Phylum
-DV | Division
-SBDV | Sous-Division
-SPCL | Super-Classe
-CLAD | Cladus
-CL | _Classe_
-SBCL | Sous-classe
-IFCL | Infra-classe
-LEG | Legio
-SPOR | Super-Ordre
-COH | Cohorte
-OR | Ordre
-SBOR | Sous-Ordre
-IFOR | Infra-Ordre
-SPFM | Super-Famille
-FM | _Famille_
-SBFM | Sous-Famille
-TR | Tribu
-SSTR | Sous-Tribu
-GN | _Genre_
-SSGN | Sous-Genre
-SC | Section
-SBSC | Sous-Section
-SER | Série
-SSER | Sous-Série
-AGES | Agrégat
-ES | Espèce
-SMES | Semi-Espèce
-MES | Micro-Espèce
-SSES | Sous-Espèce
-NAT | Natio
-VAR | Variété
-SVAR | Sous-Variété
-FO | Forme
-SSFO | Sous-Forme
-FOES | Format species
-LIN | Linea
-CLO | Clonage
-RACE | Race
-CAR | Cultivar
-MO | Morpha
-AB | Abberation
+Valeurs du GBIF http://rs.gbif.org/vocabulary/gbif/rank.xml
+
+ Valeur Taxref | Valeur GBIF | Description
+---------------|-------------|--------------
+Dumm           | domain      | Domaine
+SPRG           |             | Super-Règne
+KD             | kingdom     | _Règne_
+SSRG           | subkingdom  | Sous-Règne
+IFRG           |             | Infra-Règne
+               | superphylum | 
+PH             | phylum      | _Phylum/Embranchement_
+SBPH           | subphylum   | Sous-Phylum
+IFPH           |             | Infra-Phylum
+DV             |             | Division
+SBDV           |             | Sous-Division
+SPCL           | superclass  | Super-Classe
+CLAD           |             | Cladus
+CL             | class       | _Classe_
+SBCL           | subclass    | Sous-classe
+IFCL           |             | Infra-classe
+LEG            |             | Legio
+SPOR           |             | Super-Ordre
+               | supercohort | Super-Cohorte
+COH            | cohort      | Cohorte
+               | subcohort   | Sous Cohorte
+               | superorder  | Super Ordre
+OR             | order       | Ordre
+SBOR           | suborder    | Sous-Ordre
+IFOR           | infraorder  | Infra-Ordre
+SPFM           | superfamily | Super-Famille
+FM             | family      | _Famille_
+SBFM           | subfamily   | Sous-Famille
+TR             | tribe       | Tribu
+SSTR           | subtribe    | Sous-Tribu
+GN             | genus       | _Genre_
+SSGN           | subgenus    | Sous-Genre
+SC             | section     | Section
+SBSC           | subsection  | Sous-Section
+SER            | series      | Série
+SSER           | subseries   | Sous-Série
+AGES           | speciesAggregate | Agrégat
+ES             | species     | Espèce
+               | subspecificAggregate | A loosely defined group of subspecies. Zoology:'Aggregate - a group of subspecies within a species. An aggregate may be denoted by a group name interpolated in parentheses
+SMES           |             | Semi-Espèce
+MES            |             | Micro-Espèce
+SSES           | subspecies  | Sous-Espèce
+NAT            |             | Natio
+VAR            | variety     | Variété
+SVAR           | subvariety  | Sous-Variété
+FO             | form        | Forme
+SSFO           | subform     | Sous-Forme
+               | cultivar    | The epithet is usually output in single quotes and may contain multiple words, see ICBN §28. Examples: Taxus baccata 'Variegata', Juniperus ×pfitzeriana 'Wilhelm Pfitzer'; Magnolia 'Elizabeth' (= a hybrid, no species epithet)
+               | strain      | Bacteria species may be classified by strains (for example Escherichia coli O157:H7, a strain that can cause food poisoning).
+FOES           |             | Format species
+LIN            |             | Linea
+CLO            |             | Clonage
+RACE           |             | Race
+CAR            |             | Cultivar
+MO             |             | Morpha
+AB             |             | Abberation
