@@ -1,10 +1,14 @@
 TAXREF
 ======
 
-## Référentiel taxonomique : Faune, flore et fonge de France métropolitaine et d'outre-mer
+*Référentiel taxonomique : Faune, flore et fonge de France métropolitaine et d'outre-mer*
+
+http://inpn.mnhn.fr/programme/referentiel-taxonomique-taxref
 
 ### Description des colonnes
 
+Colonne | Type | Description
+--------|------|--------------------------------
 REGNE | Texte | Règne auquel le taxon appartient 
 PHYLUM | Texte | Embranchement auquel le taxon appartient 
 CLASSE | Texte | Classe à laquelle le taxon appartient
@@ -36,12 +40,12 @@ PF | Texte | Statut biogéographique en Polynésie française (clé vers TAXREF\
 NC | Texte | Statut biogéographique en Nouvelle ‐ Calédonie (clé vers TAXREF\_STATUTS
 WF | Texte | Statut biogéographique à Wallis et Futuna (clé vers TAXREF\_STATUTS) 
 CLI | Texte | Statut biogéographique à Clipperton (clé vers TAXREF\_STATUTS)
-URL | Texte | Permalien INPN = "http://inpn.mnhn.fr/espece/cd\_nom/’ + CD\_NOM
+URL | Texte | Permalien INPN = "http://inpn.mnhn.fr/espece/cd_nom/" + CD\_NOM
 
 ### Valeurs de la colonne RANG
 
 Valeur | Description
---------------
+------|-------
 Dumm | Domaine
 SPRG | Super-Règne
 KD | _Règne_
