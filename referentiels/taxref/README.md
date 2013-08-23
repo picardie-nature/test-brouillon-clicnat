@@ -5,6 +5,14 @@ TAXREF
 
 http://inpn.mnhn.fr/programme/referentiel-taxonomique-taxref
 
+### Import du référentiel
+
+Pour importer le référentiel téléchargez le sur le site du MNHN, décompresser l'archive et lancer la commande suivante :
+
+    cat TAXREFv60.txt|php import.php
+
+Patience, l'import est assez long.
+
 ### Description des colonnes
 
 GBIF : http://rs.gbif.org/core/dwc_taxon.xml
