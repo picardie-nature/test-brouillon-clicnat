@@ -11,7 +11,8 @@ class clicnat_colonne_dbTest extends PHPUnit_Framework_TestCase {
 			"column_name" => "a",
 			"data_type" => "b",
 			"character_maximum_length" => "c",
-			"is_nullable" => "YES"
+			"is_nullable" => "YES",
+			"column_default" => "plop"
 		);
 
 		$obj = new clicnat_colonne_db($args);
@@ -25,7 +26,8 @@ class clicnat_colonne_dbTest extends PHPUnit_Framework_TestCase {
 			"column_name" => "a",
 			"data_type" => "b",
 			"character_maximum_length" => "c",
-			"is_nullable" => "YES"
+			"is_nullable" => "YES",
+			"column_default" => "plop"
 		);
 
 		$obj = new clicnat_colonne_db($args);

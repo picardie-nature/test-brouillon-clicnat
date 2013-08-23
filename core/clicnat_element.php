@@ -20,6 +20,16 @@
 
 class ExPropInconnue extends Exception { }
 class ExConfiguration extends Exception { }
+class ExErreurRequeteSQL extends Exception {
+	public function __construct($req, $code = 0, Exception $previous = null) {
+		parent::__construct($req->errorInfo()[2], $req->errorCode(), $previous);
+	}
+}
+class ExPasTrouve extends Exception { 
+	public function __construct($table, $id) {
+		parent::__construct("Pas trouvé d'élément $id dans la table $table");
+	}
+}
 
 /**
  * @brief accès à la configuration de l'application
@@ -73,11 +83,17 @@ abstract class clicnat_element_db {
 		$this->table = clicnat_table_db($nom_table);
 		if (!is_array($data)) {
 			$q = db()->prepare("select * from {$this->table->table} where {$this->table->cle_primaire} = ?");
-			$q->execute(array($id));
+			if (!$q->execute(array($id))) {
+				throw new ExErreurRequeteSQL($req);
+			}
 			$data = $q->fetch(PDO::FETCH_ASSOC);
 		}
-		foreach ($data as $k=>$v)
+		if ($q->rowCount() != 1) {
+			throw new ExPasTrouve($nom_table, $id);
+		}
+		foreach ($data as $k=>$v) {
 			$this->$k = $v;
+		}
 	}
 
 	/**
@@ -125,6 +141,7 @@ abstract class clicnat_element_db {
 		}
 		return true;
 	}
+	
 }
 
 /**
@@ -137,7 +154,8 @@ class clicnat_table_db {
 
 	protected $colonnes;
 
-	const sql_colonnes = 'select column_name,data_type,character_maximum_length,is_nullable from information_schema.columns where table_schema=? and table_name=?';
+	const sql_colonnes = 'select column_name,data_type,character_maximum_length,is_nullable,column_default
+			from information_schema.columns where table_schema=? and table_name=?';
 	
 	/**
 	 * @brief constructeur
@@ -173,10 +191,35 @@ class clicnat_table_db {
 			$this->colonnes = array();
 			$req = db()->prepare(self::sql_colonnes);
 			$req->execute(array($this->schema, $this->table));
-			foreach ($req->fetchAll() as $tc)
+			foreach ($req->fetchAll() as $tc) {
 				$this->colonnes[$tc['column_name']] = new clicnat_colonne_db($tc);
+			}
 		}
 		return $this->colonnes;
+	}
+
+	/**
+	 * @brief insertion d'une nouvelle ligne dans la table
+	 * @param $colonnes un tableau clé valeurs du contenu a insérer
+	 * @return int id de l'objet inséré 
+	 */
+	public function insert($colonnes) {
+		$colonnes[$this->cle_primaire] = $this->id_suivant();
+		$nom_cols = "";
+		$valeurs = "";
+		$tab_valeurs = array();
+		foreach ($colonnes as $colonne => $valeur) {
+			$nom_cols .= "$colonne,";
+			$valeurs .= "?,";
+			$tab_valeurs[] = $valeur;
+		}
+		$nom_cols = trim($nom_cols,",");
+		$valeurs = trim($valeurs,",");
+		$req = db()->prepare("insert into {$this->table} ($nom_cols,date_creation) values ($valeurs,now())");
+		if (!$req->execute($tab_valeurs)) {
+			throw new ExErreurRequeteSQL($req);
+		}
+		return $colonnes[$this->cle_primaire];
 	}
 
 	/**
@@ -190,11 +233,55 @@ class clicnat_table_db {
 		if (empty($id))
 			throw new Exception("pas d'identifiant");
 		$req = db()->prepare("update {$this->table} set $colonne = ?, date_modif=now() where {$this->cle_primaire} = ?");
-		$req->execute(array($valeur, $id));
+		if (!$req->execute(array($valeur, $id))) {
+			throw new ExErreurRequeteSQL($req);
+		}
 		if ($req->rowCount()==0) {
 			throw new Exception("aucune mise à jour enregistrée {$req->errorCode()}");
 		}
 		return true;
+	}
+
+	const sql_select_id_suivant = 'select nextval(?) as id';
+	const sql_select_id_dernier = 'select last_value from "?"';
+
+	/**
+	 * @brief nom de la séquence de la clé primaire
+	 * @return string
+	 */
+	public function nom_sequence_cle_primaire() {
+		$nom_sequence = null;
+		$sequence = $this->colonnes()[$this->cle_primaire]->valeur_par_defaut;
+		if (preg_match("/^nextval\('(.*)'::regclass\)/", $sequence, $m)) {
+			$nom_sequence = $m[1];
+		} else {
+			throw new Exception("la valeur par défaut ressemble pas à une séquence");
+		}
+		return $nom_sequence;
+	}
+
+	/**
+	 * @brief extrait l'id suivant (nextval)
+	 * @return int
+	 */
+	public function id_suivant() {
+		$req = db()->prepare(self::sql_select_id_suivant);
+		if (!$req->execute(array($this->nom_sequence_cle_primaire()))) {
+			throw new ExErreurRequeteSQL($req);
+		}
+		return $req->fetch()['id'];
+	}
+
+	/**
+	 * @brief dernier id distribué par la séquence
+	 * @return int
+	 */
+	public function id_dernier() {
+		$req = db()->prepare(sprintf("select last_value from \"%s\"",$this->nom_sequence_cle_primaire()));
+		if (!$req->execute(array())) {
+			throw new ExErreurRequeteSQL($req);
+		}
+		return $req->fetch()['last_value'];
 	}
 }
 
@@ -206,6 +293,7 @@ class clicnat_colonne_db {
 	protected $type;
 	protected $lmax_texte;
 	protected $null_ok;
+	protected $valeur_par_defaut;
 
 	/**
 	 * @brief constructeur
@@ -216,6 +304,7 @@ class clicnat_colonne_db {
 		$this->type = $args['data_type'];
 		$this->lmax_texte = $args['character_maximum_length'];
 		$this->null_ok = $args['is_nullable'] == 'YES';
+		$this->valeur_par_defaut = $args['column_default'];
 	}
 
 	/**
@@ -229,6 +318,7 @@ class clicnat_colonne_db {
 			case 'type':
 			case 'lmax_texte':
 			case 'null_ok':
+			case 'valeur_par_defaut':
 				return $this->$c;
 		}
 		throw new ExPropInconnue($c);
@@ -251,6 +341,8 @@ function clicnat_table_db($table, $schema="public") {
 			case 'utilisateurs':
 				$cle_primaire = "id_utilisateur";
 				break;
+			case 'especes':
+				$cle_primaire = "id_espece";
 			default:
 				throw new Exception("Table inconnue $table");
 		}

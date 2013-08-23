@@ -3,7 +3,7 @@ require_once("PHPUnit/Autoload.php");
 require_once("../core/clicnat_element.php");
 require_once("../core/clicnat_utilisateur.php");
 
-class clicnat_utilistateurTest extends PHPUnit_Framework_TestCase {
+class clicnat_utilisateurTest extends PHPUnit_Framework_TestCase {
 	public function testPresenceColonnes() {
 		$u = new clicnat_utilisateur(1);
 		$u->test_presence_proprietes_colonnes();
@@ -37,5 +37,32 @@ class clicnat_utilistateurTest extends PHPUnit_Framework_TestCase {
 		$u = new clicnat_utilisateur(1);
 		// test toString
 		$this->assertEquals($u->__toString(), "admin");
+	}
+
+	public function testNomSequence() {
+		$table_utilisateur = clicnat_table_db('utilisateurs');
+		$nom = $table_utilisateur->nom_sequence_cle_primaire();
+		$this->assertNotNull($nom);
+	}
+
+	public function testInsertion() {
+		$table_utilisateur = clicnat_table_db('utilisateurs');
+		$id = $table_utilisateur->id_dernier();
+		$this->assertGreaterThan(0, $id);
+		$id_suivant = $table_utilisateur->id_suivant();
+		$this->assertGreaterThan($id, $id_suivant);
+		$id = $id_suivant;
+
+		$data_test = array(
+			"nom" => "Doe",
+			"prenom" => "John",
+			"mail" => "john@doe.com"
+		);
+		$id_suivant = $table_utilisateur->insert($data_test);
+		$this->assertGreaterThan($id, $id_suivant);
+
+		$u = new clicnat_utilisateur($id_suivant);
+		$this->assertEquals($u->id_utilisateur, $id_suivant);
+
 	}
 }
