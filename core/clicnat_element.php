@@ -73,6 +73,9 @@ function db() {
 abstract class clicnat_element_db {
 	protected $table;
 
+	protected $date_creation;
+	protected $date_modif;
+
 	/**
 	 * @brief constructeur
 	 * @param $nom_table classe dérivée de clicnat_table_db
@@ -343,6 +346,10 @@ function clicnat_table_db($table, $schema="public") {
 				break;
 			case 'especes':
 				$cle_primaire = "id_espece";
+				break;
+			case 'taxons':
+				$cle_primaire = "id_taxon";
+				break;
 			default:
 				throw new Exception("Table inconnue $table");
 		}
