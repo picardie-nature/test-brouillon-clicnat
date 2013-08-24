@@ -28,4 +28,5 @@ create language plpgsql;
 
 -- creation des tables
 #include <utilisateurs.sql>
+#include <comites_homologations.sql>
 #include <especes.sql>

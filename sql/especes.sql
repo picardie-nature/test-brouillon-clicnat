@@ -129,24 +129,31 @@ create table especes (
 	date_creation timestamp default now(),
 	date_modif timestamp default null,
 
-	id_espece_sup integer references especes(id_espece),
+	id_espece_sup integer references especes (id_espece),
+	id_comite_homologation integer references comites_homologations (id_comite_homologation),
 
-	nom_scientifique varchar(100),
-	auteur varchar(100),
-	nom_vernaculaire varchar(100),
+	nom_scientifique text,
+	regne text,
+	embranchement text, -- aka phylum
+	classe text,
+	ordre text,
+	famille text,
+	rang text,
+	nom_vernaculaire text,
+	auteur text,
 
-	regne varchar(10),
-	embranchement varchar(100),
-	classe varchar(100),
-	ordre varchar(100),
-	famille varchar(100),
-	
-	rang varchar(100),
+	-- superficie max pour prise en compte dans les cartes de répart.
+	superficie_max integer default 0,
+	-- exclue des listes communales
+	exclure_restitution boolean default false,
+
+	attributs text,
+
 	primary key (id_espece)
 );
 
 -- associations référentiel de la base avec référentiels officiels
-create table especes_taxons (
+create table especes__taxons (
 	id_espece integer references especes (id_espece),
 	id_taxon integer references taxons (id_taxon)
 );
