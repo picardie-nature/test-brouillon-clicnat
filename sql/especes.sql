@@ -69,32 +69,32 @@ create table taxons (
 	-- * nom scientifique du taxon
 	--   taxref LB_NOM
 	--   gbif   scientificName
-	nom_scientifique varchar(100),
+	nom_scientifique text,
 
 	-- * regne du taxon
 	--   taxref REGNE
 	--   gbif   kingdom
-	regne varchar(10),
+	regne text,
 
 	-- * Embranchement ou phylum
 	--   taxref PHYLUM
 	--   gbif   phylum
-	embranchement varchar(100), -- aka phylum
+	embranchement text, -- aka phylum
 
 	-- * Classe du taxon
 	--   taxref CLASSE
 	--   gbif   class
-	classe varchar(100),
+	classe text,
 
 	-- * Ordre du taxon
 	--   taxref ORDRE
 	--   gbif   order
-	ordre varchar(100),
+	ordre text,
 
 	-- * Famille
 	--   taxref FAMILLE
 	--   gbif   family
-	famille varchar(100),
+	famille text,
 
 	-- * Rang du taxon
 	--   taxref RANG
@@ -104,7 +104,7 @@ create table taxons (
 	-- http://rs.tdwg.org/dwc/terms/index.htm#taxonRank
 	-- http://code.google.com/p/darwincore/wiki/Taxon#taxonRank
 	-- 
-	rang varchar(100),
+	rang text,
 
         -- * Nom vernaculaire du taxon
 	--   taxref NOM_VERN et NOM_VERN_ENG
@@ -112,13 +112,13 @@ create table taxons (
 	-- ils peuvent être plusieurs et dans plusieurs langues
 	-- peut être un tableau avec un type composé ?
 	-- http://rs.tdwg.org/dwc/terms/index.htm#vernacularName
-	nom_vernaculaire varchar(100),
+	nom_vernaculaire text,
 
 	-- * Auteur du taxon
 	--   taxref LB_AUTEUR
 	--   gbif   scientificNameAuthorship
 	-- http://rs.tdwg.org/dwc/terms/index.htm#scientificNameAuthorship
-	auteur varchar(100),
+	auteur text,
 
 	primary key (id_taxon)
 );
