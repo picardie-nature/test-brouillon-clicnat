@@ -11,7 +11,7 @@ Pour importer le référentiel téléchargez le sur le site du MNHN, décompress
 
     cat TAXREFv60.txt|php import.php
 
-Patience, l'import est assez long.
+Patience, l'import est assez long : 85 minutes pour le référentiel complet sur un portable.
 
 ### Description des colonnes
 
