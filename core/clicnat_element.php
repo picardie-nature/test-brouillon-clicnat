@@ -166,7 +166,26 @@ abstract class clicnat_element_db {
 		}
 		return true;
 	}
-	
+
+	/**
+	 * @brief cherche un élément (échoue si le résultat contient plusieurs lignes)
+	 */
+	protected static function _rechercher($params, $nom_table, $schema="public") {
+		$table = clicnat_table_db($nom_table, $schema);
+		$valeurs = array();
+		$where = "";
+		foreach ($params as $k=>$v) {
+			$where .= " $k = ? and";
+			$valeurs[] = $v;
+		}
+		$sql = "select {$table->cle_primaire} as id from {$table->table} where $where 1=1";
+		$req = db()->prepare($sql);
+		$req->execute($valeurs);
+		if ($req->rowCount() != 1) {
+			return false;
+		}
+		return self::instance($req->fetch()['id']);
+	}
 }
 
 /**

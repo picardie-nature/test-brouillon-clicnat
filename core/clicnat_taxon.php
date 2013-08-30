@@ -37,9 +37,16 @@ class clicnat_taxon extends clicnat_element_db {
 	protected $nom_vernaculaire;
 	protected $auteur;
 
-	public function __construct($id, $nom_table='taxons', $data=null) {
+	const nom_table = 'taxons';
+	const schema = 'public';
+
+	public function __construct($id, $nom_table=self::nom_table, $data=null) {
 		$this->table = clicnat_table_db($nom_table);
 		parent::__construct($id, $nom_table, $data);
+	}
+
+	public static function rechercher($params) {
+		return parent::_rechercher($params, self::nom_table, self::schema);
 	}
 
 }

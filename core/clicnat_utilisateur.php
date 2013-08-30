@@ -42,7 +42,10 @@ class clicnat_utilisateur extends clicnat_element_db {
 	protected $nouvel_observateur;
 	protected $the_geom;
 
-	public function __construct($id, $nom_table='utilisateurs', $data=null) {
+	const nom_table = 'utilisateurs';
+	const schema = 'public';
+
+	public function __construct($id, $nom_table=self::nom_table, $data=null) {
 		$this->table = clicnat_table_db($nom_table);
 		parent::__construct($id, $nom_table, $data);
 	}
@@ -50,7 +53,7 @@ class clicnat_utilisateur extends clicnat_element_db {
 	public function __toString() {
 		return trim("{$this->nom} {$this->prenom}");
 	}
-	
+
 	public function crypte_mot_de_passe($mdp) {
 		return hash('sha256', "{$mdp}§{$this->id_utilisateur}");
 	}
@@ -67,9 +70,9 @@ class clicnat_utilisateur extends clicnat_element_db {
 	 * @brief recherche un utilisateur
 	 * @params $args un tableau cle/valeur, la clé doit correspondre a un champ
 	 * @return clicnat_iter_utilisateur
-	 * @todo
 	 */
 	static public function rechercher($args) {
+		return parent::_rechercher($args, self::nom_table, self::schema);
 	}
 
 	/**

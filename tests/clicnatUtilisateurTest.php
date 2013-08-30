@@ -4,6 +4,12 @@ require_once("../core/clicnat_element.php");
 require_once("../core/clicnat_utilisateur.php");
 
 class clicnat_utilisateurTest extends PHPUnit_Framework_TestCase {
+	public function testRechercher() {
+		$u = clicnat_utilisateur::rechercher(array("identifiant"=>"admin"));
+		$this->assertInstanceOf('clicnat_utilisateur', $u);
+		$this->assertEquals(1, $u->id());
+	}
+
 	public function testSingleton() {
 		//$u = clicnat_utilisateur(1);
 		$u = clicnat_utilisateur::instance(1);
