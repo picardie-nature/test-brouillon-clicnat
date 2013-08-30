@@ -170,6 +170,49 @@ abstract class clicnat_element_db {
 }
 
 /**
+ * @brief gestion de liste d'objets (itérateur)
+ */
+abstract class clicnat_table_iterateur implements Iterator {
+	protected $table;
+
+	protected $position;
+
+	protected $ids;
+
+	public function __construct($nom_table, $schema="public") {
+		$this->table = clicnat_table_db($nom_table, $schema);
+	}
+
+	public function key() {
+		return $this->position;
+	}
+
+	public function next() {
+		$this->position += 1;
+	}
+
+	public function rewind() {
+		$this->position -= 1;
+	}
+
+	public function valid() {
+		return (($this->position > 0) && ($this->position<count($ids)));
+	}
+
+	/**
+	 * @brief liste des identifiants
+	 * @param $liste_identifiants remplace la liste par $liste_identifiants si null ne fait rien
+	 * @return array la liste des identifiants
+	 */
+	public function identifiants($liste_identifiants=null) {
+		if (!is_null($liste_identifiants)) {
+			$this->ids = $liste_identifiants;
+		}
+		return $this->ids;
+	}
+}
+
+/**
  * @brief une table de la base de données
  */
 class clicnat_table_db {

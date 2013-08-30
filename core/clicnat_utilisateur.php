@@ -64,7 +64,7 @@ class clicnat_utilisateur extends clicnat_element_db {
 	}
 
 	/**
-	 * @brief recherche d'utilisateurs
+	 * @brief recherche un utilisateur
 	 * @params $args un tableau cle/valeur, la clé doit correspondre a un champ
 	 * @return clicnat_iter_utilisateur
 	 * @todo
