@@ -76,6 +76,8 @@ abstract class clicnat_element_db {
 	protected $date_creation;
 	protected $date_modif;
 
+	protected $date_instance;
+
 	/**
 	 * @brief constructeur
 	 * @param $nom_table classe dérivée de clicnat_table_db
@@ -83,6 +85,7 @@ abstract class clicnat_element_db {
 	 * @param $data données de l'objet évite au constructeur de faire la requête, l'id peut être omis
 	 */
 	public function __construct($id, $nom_table, $data=null) {
+		$this->date_instance = time();
 		$this->table = clicnat_table_db($nom_table);
 		if (!is_array($data)) {
 			$q = db()->prepare("select * from {$this->table->table} where {$this->table->cle_primaire} = ?");
@@ -97,6 +100,22 @@ abstract class clicnat_element_db {
 		foreach ($data as $k=>$v) {
 			$this->$k = $v;
 		}
+	}
+
+	public static function instance($id) {
+		static $instances;
+		static $instances_liste;
+
+		$classe = get_called_class();
+
+		if (!isset($instances_liste)) $instances_liste = array();
+		if (!isset($instances)) $instances = array();
+		if (!isset($instances[$classe])) $instances[$classe] = array();
+		if (!isset($instances[$classe][$id])) {
+			$instances_liste[] = $instances[$classe][$id] = new $classe($id);
+		}
+		
+		return $instances[$classe][$id];
 	}
 
 	/**
@@ -127,6 +146,9 @@ abstract class clicnat_element_db {
 	public function __get($colonne) {
 		$colonnes = $this->table->colonnes();
 		if (array_key_exists($colonne, $colonnes) === false) {
+			if ($colonne == "date_instance")
+				return $this->date_instance;
+
 			throw new ExPropInconnue($colonne);
 		}
 		return $this->$colonne;

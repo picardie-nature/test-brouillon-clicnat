@@ -4,6 +4,15 @@ require_once("../core/clicnat_element.php");
 require_once("../core/clicnat_utilisateur.php");
 
 class clicnat_utilisateurTest extends PHPUnit_Framework_TestCase {
+	public function testSingleton() {
+		//$u = clicnat_utilisateur(1);
+		$u = clicnat_utilisateur::instance(1);
+		$this->assertEquals($u->__toString(), "admin");
+		sleep(2);
+		$u2 = clicnat_utilisateur::instance(1);
+		$this->assertEquals($u->date_instance, $u2->date_instance);
+	}
+	
 	public function testPresenceColonnes() {
 		$u = new clicnat_utilisateur(1);
 		$u->test_presence_proprietes_colonnes();

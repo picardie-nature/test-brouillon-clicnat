@@ -1,5 +1,5 @@
 <?php
-define('CLICNAT_CHEMIN_CONF', '../config.json');
+define('CLICNAT_CHEMIN_CONF', 'config.json');
 require_once("PHPUnit/Autoload.php");
 require_once("../core/clicnat_element.php");
 
