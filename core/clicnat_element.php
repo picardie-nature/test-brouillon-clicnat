@@ -86,7 +86,7 @@ abstract class clicnat_element_db {
 	 */
 	public function __construct($id, $nom_table, $data=null) {
 		$this->date_instance = time();
-		$this->table = clicnat_table_db($nom_table);
+		$this->table = clicnat_table_db::instance($nom_table);
 		if (!is_array($data)) {
 			$q = db()->prepare("select * from {$this->table->table} where {$this->table->cle_primaire} = ?");
 			if (!$q->execute(array($id))) {
@@ -171,7 +171,7 @@ abstract class clicnat_element_db {
 	 * @brief cherche un élément (échoue si le résultat contient plusieurs lignes)
 	 */
 	protected static function _rechercher($params, $nom_table, $schema="public") {
-		$table = clicnat_table_db($nom_table, $schema);
+		$table = clicnat_table_db::instance($nom_table, $schema);
 		$valeurs = array();
 		$where = "";
 		foreach ($params as $k=>$v) {
@@ -199,7 +199,7 @@ abstract class clicnat_table_iterateur implements Iterator {
 	protected $ids;
 
 	public function __construct($nom_table, $schema="public") {
-		$this->table = clicnat_table_db($nom_table, $schema);
+		$this->table = clicnat_table_db::instance($nom_table, $schema);
 	}
 
 	public function key() {
@@ -288,6 +288,31 @@ class clicnat_table_db {
 			case 'schema': return $this->schema;
 		}
 		throw new ExPropInconnue($c);
+	}
+
+	public static function instance($table, $schema='public') {
+		static $instances;
+
+		if (!isset($instances))
+			$instances = array();
+
+		if (!isset($instances["$schema.$table"])) {
+			switch ($table) {
+				case 'utilisateurs':
+					$cle_primaire = "id_utilisateur";
+					break;
+				case 'especes':
+					$cle_primaire = "id_espece";
+					break;
+				case 'taxons':
+					$cle_primaire = "id_taxon";
+					break;
+				default:
+					throw new Exception("Table inconnue $table");
+			}
+			$instances["$schema.$table"] = new clicnat_table_db($table, $cle_primaire, $schema);
+		}
+		return $instances["$schema.$table"];
 	}
 
 	/**
@@ -431,37 +456,5 @@ class clicnat_colonne_db {
 		}
 		throw new ExPropInconnue($c);
 	}
-}
-
-/**
- * @brief singleton d'une table
- * @param $table nom de la table
- * @return instance de clicnat_table_db
- */
-function clicnat_table_db($table, $schema="public") {
-	static $instances;
-
-	if (!isset($instances))
-		$instances = array();
-	
-	if (!isset($instances["$schema.$table"])) {
-		switch ($table) {
-			case 'utilisateurs':
-				$cle_primaire = "id_utilisateur";
-				break;
-			case 'especes':
-				$cle_primaire = "id_espece";
-				break;
-			case 'taxons':
-				$cle_primaire = "id_taxon";
-				break;
-			default:
-				throw new Exception("Table inconnue $table");
-		}
-
-		$instances["$schema.$table"] = new clicnat_table_db($table, $cle_primaire, $schema);
-	}
-
-	return $instances["$schema.$table"];
 }
 ?>

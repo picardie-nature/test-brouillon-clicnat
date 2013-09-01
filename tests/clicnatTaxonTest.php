@@ -20,7 +20,7 @@ class clicnat_taxonTest extends PHPUnit_Framework_TestCase {
 			"nom_vernaculaire" => "Nom vernaculaire",
 			"auteur" => "Auteur du taxon"
 		);
-		clicnat_table_db('taxons')->insert($data);
+		clicnat_table_db::instance('taxons')->insert($data);
 	}
 }
 

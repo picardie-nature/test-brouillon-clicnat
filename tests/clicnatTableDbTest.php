@@ -5,12 +5,12 @@ require_once("../core/clicnat_element.php");
 
 class clicnat_table_dbTest extends PHPUnit_Framework_TestCase {
 	public function testGetTableDb() {
-		$obj_a = clicnat_table_db("utilisateurs");
+		$obj_a = clicnat_table_db::instance("utilisateurs");
 		$this->assertInstanceOf("clicnat_table_db", $obj_a);
 	}
 
 	public function testInstanceUtilisateur() {
-		$obj = new clicnat_table_db("utilisateurs", "id_utilisateur");
+		$obj = clicnat_table_db::instance("utilisateurs");
 		$this->assertEquals($obj->table, "utilisateurs");
 		$this->assertEquals($obj->cle_primaire, "id_utilisateur");
 		$this->assertEquals($obj->schema, "public");
@@ -24,7 +24,7 @@ class clicnat_table_dbTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException ExPropInconnue
 	 */
 	public function testException() {
-		$obj = new clicnat_table_db("utilisateurs", "id_utilisateur");
+		$obj = clicnat_table_db::instance("utilisateurs");
 		echo $obj->prop_inconnue;
 	}
 

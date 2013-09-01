@@ -55,13 +55,13 @@ class clicnat_utilisateurTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testNomSequence() {
-		$table_utilisateur = clicnat_table_db('utilisateurs');
+		$table_utilisateur = clicnat_table_db::instance('utilisateurs');
 		$nom = $table_utilisateur->nom_sequence_cle_primaire();
 		$this->assertNotNull($nom);
 	}
 
 	public function testInsertion() {
-		$table_utilisateur = clicnat_table_db('utilisateurs');
+		$table_utilisateur = clicnat_table_db::instance('utilisateurs');
 		$id = $table_utilisateur->id_dernier();
 		$this->assertGreaterThan(0, $id);
 		$id_suivant = $table_utilisateur->id_suivant();

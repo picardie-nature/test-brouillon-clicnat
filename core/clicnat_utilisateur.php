@@ -46,7 +46,7 @@ class clicnat_utilisateur extends clicnat_element_db {
 	const schema = 'public';
 
 	public function __construct($id, $nom_table=self::nom_table, $data=null) {
-		$this->table = clicnat_table_db($nom_table);
+		$this->table = clicnat_table_db::instance($nom_table);
 		parent::__construct($id, $nom_table, $data);
 	}
 
