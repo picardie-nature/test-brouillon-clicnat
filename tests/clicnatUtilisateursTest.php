@@ -12,4 +12,18 @@ class clicnat_utilisateursTest extends PHPUnit_Framework_TestCase {
 			$this->assertEquals($liste->id() == "1");
 		}
 	}
+
+	public function testRerchercher() {
+		$liste = new clicnat_utilisateurs();
+		$this->assertEquals(1, $liste->rechercher(array("nom" => "Doe")));
+		foreach ($liste as $e) {
+			$this->assertEquals($liste->id() == "1");
+		}
+	}
+
+	public function testRerchercher2() {
+		$liste = new clicnat_utilisateurs();
+		$this->assertEquals(2, $liste->rechercher(array()));
+	}
+
 }

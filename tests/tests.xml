@@ -1,0 +1,12 @@
+<phpunit>
+	<testsuites>
+		<testsuite name="Clicnat">
+			<file>clicnatTableDbTest.php</file>
+			<file>clicnatColonneDbTest.php</file>
+			<file>clicnatConfTest.php</file>
+			<file>clicnatTaxonTest.php</file>
+			<file>clicnatUtilisateurTest.php</file>
+			<file>clicnatUtilisateursTest.php</file>
+		</testsuite>
+	</testsuites>
+</phpunit>

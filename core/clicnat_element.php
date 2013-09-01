@@ -184,7 +184,7 @@ abstract class clicnat_element_db {
 		if ($req->rowCount() != 1) {
 			return false;
 		}
-		return self::instance($req->fetch()['id']);
+		return self::instance($req->fetchColumn());
 	}
 }
 
@@ -228,6 +228,27 @@ abstract class clicnat_table_iterateur implements Iterator {
 			$this->ids = $liste_identifiants;
 		}
 		return $this->ids;
+	}
+
+	/**
+	 * @brief initialise la liste des éléments à partir d'une rercherche
+	 * @params liste des critères
+	 * @return le nombre d'éléments trouvés
+	 */
+	public function rechercher($params) {
+		$valeurs = array();
+		$where = "";
+		foreach ($params as $k=>$v) {
+			$where .= " $k = ? and";
+			$valeurs[] = $v;
+		}
+		$sql = "select {$this->table->cle_primaire} as id from {$this->table->table} where $where 1=1";
+		$req = db()->prepare($sql);
+		$req->execute($valeurs);
+		$this->ids = array();
+		while ($r = $req->fetchColumn())
+			$this->ids[] = $r;
+		return count($this->ids);
 	}
 }
 
