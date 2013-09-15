@@ -23,12 +23,23 @@ if (!file_exists($sm->compile_dir)) mkdir($sm->compile_dir);
 if (!file_exists($sm->cache_dir)) mkdir($sm->cache_dir);
 
 if (!isset($_SERVER['PATH_INFO']))
-	$section = "index";
+	$section = array("index");
 elseif ($_SERVER['PATH_INFO'] == '/')
-	$section = "index";
+	$section = array("index");
 else 
-	$section = explode("/", trim($_SERVER['PATH_INFO'],"/"))[0];
+	$section = explode("/", trim($_SERVER['PATH_INFO'],"/"));
 
-$sm->assign('section', $section);
-$sm->display("index.tpl");
+if (!file_exists("{$conf->section_dir}/{$section[0]}")) {
+	throw new Exception("404");
+}
+
+//todo: mieux vérifier que le dossier est bien présent et est une section
+
+require_once("{$conf->section_dir}/{$section[0]}/classes/clicnat_section_{$section[0]}.php");
+
+$sm->addTemplateDir("{$conf->section_dir}/{$section[0]}/smarty/");
+$obj_section = call_user_func("clicnat_section_{$section[0]}"); 
+$sm->assign("section", $obj_section);
+$sm->assign("url_base", $conf->url_base);
+$template = $obj_section->exec($section, $sm);
 ?>
