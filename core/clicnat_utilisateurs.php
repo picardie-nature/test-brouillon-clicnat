@@ -11,7 +11,7 @@ class clicnat_utilisateurs extends clicnat_table_iterateur {
 	}
 
 	public function current() {
-		self::instance($this->ids[$this->position]);
+		clicnat_utilisateur::instance($this->ids[$this->position]);
 	}
 }
 ?>
