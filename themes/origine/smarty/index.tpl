@@ -1,0 +1,3 @@
+Clicnat Index
+
+{$section}
