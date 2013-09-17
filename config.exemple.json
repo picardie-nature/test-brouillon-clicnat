@@ -2,5 +2,6 @@
 	"pdo_pgsql_dsn": "pgsql:host=localhost;port=5432;dbname=clicnatd;user=xxxxxx;password=yyyyy",
 	"theme_dir": "../themes",
 	"theme": "origine",
-	"section_dir":"../sections"
+	"section_dir":"../sections",
+	"url_base":"http://urldebase/"
 }
